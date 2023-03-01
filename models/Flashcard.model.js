@@ -10,7 +10,13 @@ const flashcardSchema = new Schema (
             type: String,
             required: true
         },
-        
-
+        deck: {
+            type: Schema.Types.ObjectId,
+            ref: 'Deck' 
+        },
     }
 )
+
+const Flashcard = model("Flashcard", flashcardSchema);
+
+module.exports = Flashcard;
