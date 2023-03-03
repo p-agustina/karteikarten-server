@@ -15,6 +15,8 @@ const flashcardSchema = new Schema({
   },
   box: {
     type: Number,
+    min: 1,
+    max: 7
   },
   lastReviewDate: {
     type: Date,

@@ -25,16 +25,19 @@ router.get("/decks", (req, res, next) => {
         res.json(decksFound)
     })
     .catch((err)=>console.log(err))
-})
-
+});
 
 router.post("/flashcard", (req, res, next) => {
-    const {name, description} = req.body
+    const {germanWord, translation, deckId} = req.body
 
-    Flashcard.create({name, description})
+    Flashcard.create({germanWord, translation, box: 1})
     .then(newCard => {
-        console.log(newCard)
+      Deck.findByIdAndUpdate(deckId, {$push: {flashcards: newCard}})
+      .then(() => {})
     })
-})
+    .catch((err) => console.log(err));
+});
+
+
 
 module.exports = router;
