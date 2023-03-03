@@ -8,6 +8,7 @@ const flashcardSchema = new Schema({
   translation: {
     type: String,
     required: true,
+    unique: true
   },
   deck: {
     type: Schema.Types.ObjectId,

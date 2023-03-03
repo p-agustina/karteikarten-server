@@ -1,4 +1,5 @@
 const express = require("express");
+const { findByIdAndUpdate } = require("../models/Deck.model");
 const router = express.Router();
 const Deck = require("../models/Deck.model");
 const Flashcard = require("../models/Flashcard.model");
@@ -27,6 +28,16 @@ router.get("/decks", (req, res, next) => {
     .catch((err)=>console.log(err))
 });
 
+router.post("/edit-deck", (req, res, next) => {
+    const {name, description, deckId} = req.body;
+    console.log(req.body)
+
+    Deck.findByIdAndUpdate(deckId, {name, description})
+    .then(() => {})
+    .catch((err) => console.log(err));
+
+})
+
 router.post("/flashcard", (req, res, next) => {
     const {germanWord, translation, deckId} = req.body
 
@@ -38,6 +49,13 @@ router.post("/flashcard", (req, res, next) => {
     .catch((err) => console.log(err));
 });
 
+router.get("/flashcards", (req, res, next) => {
+    Flashcard.find()
+    .then((flashcardsFound) => {
+        res.json(flashcardsFound)
+    })
+    .catch((err)=>console.log(err))
+})
 
 
 module.exports = router;
