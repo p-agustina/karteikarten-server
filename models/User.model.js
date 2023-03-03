@@ -16,6 +16,15 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, 'Password is required.']
+    },
+    deck: {
+      type: Schema.Types.ObjectId,
+      ref: 'Deck' 
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user"
     }
   },
   {

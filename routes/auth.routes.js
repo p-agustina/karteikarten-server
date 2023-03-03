@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.model");
+const Deck = require("../models/Deck.model");
 
 const router = express.Router();
 
@@ -45,7 +46,13 @@ router.post("/signup", (req, res, next) => {
       const { email, name, _id } = createdUser;
     
       const user = { email, name, _id };
- 
+      // Deck.create({name:'' , descripton:''})
+      // .then(createdDeck=>{
+      //   User.findByIdAndUpdate(createdUser._id, {deck: createdDeck._id})
+      //   .then(() => {
+      //   })
+      // })
+      
       res.status(201).json({ user: user });
     })
     .catch(err => {
