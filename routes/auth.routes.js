@@ -43,17 +43,17 @@ router.post("/signup", (req, res, next) => {
       return User.create({ email, password: hashedPassword, name });
     })
     .then((createdUser) => {
-      const { email, name, _id } = createdUser;
-    
-      const user = { email, name, _id };
-      // Deck.create({name:'' , descripton:''})
-      // .then(createdDeck=>{
-      //   User.findByIdAndUpdate(createdUser._id, {deck: createdDeck._id})
-      //   .then(() => {
-      //   })
-      // })
-      
-      res.status(201).json({ user: user });
+
+      Deck.create({name: 'My deck', description:'first deck'})
+      .then((createdDeck)=>{
+        User.findByIdAndUpdate(createdUser._id, {deck: createdDeck._id})
+     .then(() => {
+       const { email, name, _id } = createdUser;
+     
+       const user = { email, name, _id };
+       res.status(201).json({ user: user });
+         })
+      })
     })
     .catch(err => {
       console.log(err);
@@ -80,9 +80,9 @@ router.post('/login', (req, res, next) => {
         const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
    
         if (passwordCorrect) {
-          const { _id, email, name } = foundUser;
+          const { _id, email, name, deck } = foundUser;
           
-          const payload = { _id, email, name };
+          const payload = { _id, email, name, deck };
    
           const authToken = jwt.sign( 
             payload,
@@ -101,7 +101,6 @@ router.post('/login', (req, res, next) => {
   });
 
 router.get('/verify', isAuthenticated, (req, res, next) => {      
-  console.log(`req.payload`, req.payload);
   res.status(200).json(req.payload);
 });
 

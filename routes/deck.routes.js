@@ -21,6 +21,7 @@ router.post("/create-deck", (req, res, next) => {
 });
 
 router.get("/decks", (req, res, next) => {
+    console.log('este es', req.body)
     Deck.find()
     .then((decksFound) => {
         res.json(decksFound)
@@ -28,25 +29,39 @@ router.get("/decks", (req, res, next) => {
     .catch((err)=>console.log(err))
 });
 
-router.post("/edit-deck", (req, res, next) => {
-    const {name, description, deckId} = req.body;
+//EDIT THE DECK
+
+router.post("/edit/:deckId", (req, res, next) => {
+    const deckId = req.params.deckId
+    const {name, description} = req.body;
     console.log(req.body)
 
-    Deck.findByIdAndUpdate(deckId, {name, description})
+    Deck.findByIdAndUpdate(deckId, {name, description}, {new: true})
     .then(() => {})
     .catch((err) => console.log(err));
 
-})
+});
+
+//DELETE FLASHCARDS
+
+router.delete("/flashcards/:flashcardId", (req, res, next) => {
+    const {flashcardId} = req.params;
+
+    Flashcard.findByIdAndRemove(flashcardId)
+    .then(() => {})
+    .catch(err => res.json(err));
+});
+
+//ADD A FLASHCARD ROUTE
 
 router.post("/flashcard", (req, res, next) => {
-    const {germanWord, translation, deckId} = req.body
-
-    Flashcard.create({germanWord, translation, box: 1})
+    const {germanWord, translation,deckId} = req.body
+    Flashcard.create({germanWord, translation, deckId, box: 1})
     .then(newCard => {
-      Deck.findByIdAndUpdate(deckId, {$push: {flashcards: newCard}})
-      .then(() => {})
+       return Deck.findByIdAndUpdate(deckId, {$push: {flashcards: newCard._id}}, {new: true})
     })
-    .catch((err) => console.log(err));
+    .then(response => console.log(response))
+    .catch(err => res.json(err));
 });
 
 router.get("/flashcards", (req, res, next) => {
@@ -55,7 +70,8 @@ router.get("/flashcards", (req, res, next) => {
         res.json(flashcardsFound)
     })
     .catch((err)=>console.log(err))
-})
+});
+
 
 
 module.exports = router;
