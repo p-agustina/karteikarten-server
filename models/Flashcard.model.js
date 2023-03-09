@@ -10,10 +10,10 @@ const flashcardSchema = new Schema({
     required: true,
     unique: true
   },
-  // deck: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: "Deck",
-  // },
+  deck: {
+    type: Schema.Types.ObjectId,
+    ref: "Deck",
+  },
   box: {
     type: Number,
     min: 1,

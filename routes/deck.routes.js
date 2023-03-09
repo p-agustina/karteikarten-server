@@ -23,6 +23,7 @@ router.post("/create-deck", (req, res, next) => {
 router.get("/decks", (req, res, next) => {
     console.log('este es', req.body)
     Deck.find()
+    .populate("flashcards")
     .then((decksFound) => {
         res.json(decksFound)
     })
@@ -48,7 +49,10 @@ router.delete("/flashcards/:flashcardId", (req, res, next) => {
     const {flashcardId} = req.params;
 
     Flashcard.findByIdAndRemove(flashcardId)
-    .then(() => {})
+    .then((deletedItem) => {
+        Deck.findOneAndUpdate({ flashcards: { "$in" : [deletedItem._id]}}, {$pull: {flashcards: deletedItem._id}})
+        .then(() => console.log("funciono"))
+    })
     .catch(err => res.json(err));
 });
 
